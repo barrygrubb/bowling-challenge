@@ -76,6 +76,33 @@ describe("Game", function() {
   });
 
   it("should calculate the correct bonus for a strike", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValues(10, 5, 5);
+    game.throw();
+    expect(game.frameArray[0].totalScoreType).toBe("strike");
+    expect(game.frameArray[0].bonus).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].bonus).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].bonus).toBe(10);
+  });
+
+  it("should begin watching for bonus points after a spare", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(5);
+    expect(game.frameArray[0].waitingInitiatedAtThrow).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].waitingInitiatedAtThrow).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].waitingInitiatedAtThrow).not.toBe(null);
+  });
+
+  it("should begin watching for bonus points after a strike", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(10);
+    expect(game.frameArray[0].waitingInitiatedAtThrow).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].waitingInitiatedAtThrow).not.toBe(null);
+  });
+
+  xit("should calculate the correct bonus for consecutive strikes", function() {
     spyOn(game, "_knockDownSkittles").and.returnValue(10);
     game.throw();
     expect(game.frameArray[0].totalScoreType).toBe("strike");
