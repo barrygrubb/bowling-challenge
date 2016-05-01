@@ -8,27 +8,27 @@ function Game() {
 
 Game.prototype.throw = function() {
   if (!this._isFinalFrame()) {
-    if (this._getCurrentFrame().throw1Score === null) {
-      this._getCurrentFrame().throw1Score = this._knockDownSkittles();
-      this._getCurrentFrame().pinsRemaining -= this._getCurrentFrame().throw1Score;
+    if (this.getCurrentFrame().throw1Score === null) {
+      this.getCurrentFrame().throw1Score = this._knockDownSkittles();
+      this.getCurrentFrame().pinsRemaining -= this.getCurrentFrame().throw1Score;
       this._updateBonuses();
 
       if (this._noPinsRemaining()) {
-        this._getCurrentFrame().totalScoreType = 'strike';
-        this._getCurrentFrame().watchForBonusThrows(this);
+        this.getCurrentFrame().totalScoreType = 'strike';
+        this.getCurrentFrame().watchForBonusThrows(this);
         this._calculateTotalScore();
         this._updateBonuses();
         this._advanceFrame();
       }
     }
     else {
-      this._getCurrentFrame().throw2Score = this._knockDownSkittles();
-      this._getCurrentFrame().pinsRemaining -= this._getCurrentFrame().throw2Score;
+      this.getCurrentFrame().throw2Score = this._knockDownSkittles();
+      this.getCurrentFrame().pinsRemaining -= this.getCurrentFrame().throw2Score;
       this._updateBonuses();
 
       if (this._noPinsRemaining()) {
-        this._getCurrentFrame().totalScoreType = 'spare';
-        this._getCurrentFrame().watchForBonusThrows(this);
+        this.getCurrentFrame().totalScoreType = 'spare';
+        this.getCurrentFrame().watchForBonusThrows(this);
       }
       this._calculateTotalScore();
       this._updateBonuses();
@@ -36,8 +36,6 @@ Game.prototype.throw = function() {
     }
   }
   this._incrementThrows();
-  // this._updateBonuses();
-  // this._advanceFrame();
 };
 
 Game.prototype._rackup = function () {
@@ -50,16 +48,12 @@ Game.prototype._knockDownSkittles = function() {
   return Math.round(Math.random()*this.frameArray[this.currentFrame-1].pinsRemaining);
 };
 
-Game.prototype._getCurrentFrame = function () {
+Game.prototype.getCurrentFrame = function () {
   return this.frameArray[this.currentFrame-1]
 };
 
-Game.prototype.getNextFrame = function () {
-  return this.frameArray[this.currentFrame]
-};
-
 Game.prototype._isFinalFrame = function () {
-  this.currentFrame === 10;
+  return this.currentFrame === 10;
 };
 
 Game.prototype._advanceFrame = function () {
@@ -67,11 +61,11 @@ Game.prototype._advanceFrame = function () {
 };
 
 Game.prototype._calculateTotalScore = function () {
-  this._getCurrentFrame().totalScore = (this._getCurrentFrame().throw1Score + this._getCurrentFrame().throw2Score);
+  this.getCurrentFrame().totalScore = (this.getCurrentFrame().throw1Score + this.getCurrentFrame().throw2Score);
 };
 
 Game.prototype._noPinsRemaining = function () {
-  return this._getCurrentFrame().pinsRemaining === 0;
+  return this.getCurrentFrame().pinsRemaining === 0;
 };
 
 Game.prototype._incrementThrows = function () {
@@ -81,7 +75,5 @@ Game.prototype._incrementThrows = function () {
 Game.prototype._updateBonuses = function () {
   for (index in this.frameArray) {
     this.frameArray[index].addBonusThrows(this);
-    // frame.addBonusThrows();
-    // console.log(frame.pinsRemaining)
   }
 };

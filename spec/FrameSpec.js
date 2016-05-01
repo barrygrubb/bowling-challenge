@@ -21,7 +21,20 @@ describe("Frame", function() {
     expect(frame.pinsRemaining).toBe(10);
   });
 
-  it("Should initialize with a totalScoreType of 'normal'", function() {
+  it("should initialize with a totalScoreType of 'normal'", function() {
     expect(frame.totalScoreType).toBe('normal');
   });
+
+  it("should initialize with a bonus of null", function() {
+    expect(frame.bonus).toBe(null);
+  });
+
+  it("should initialize as an incomplete frame", function() {
+    expect(frame.frameComplete).toBe(false);
+  });
+
+  it("should not immediately be waiting for a bonus", function() {
+    expect(frame.waitingInitiatedAtThrow).toBe(null);
+  });
+
 });

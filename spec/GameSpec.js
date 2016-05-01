@@ -10,10 +10,80 @@ describe("Game", function() {
   });
 
   it("should initialize with 10 frames", function() {
-    expect(game.frameArray[10]).not.toBe(null);
     expect(game.frameArray.length).toBe(10);
   });
 
+  it("should initialize with 0 throws played", function() {
+    expect(game.numberOfThrows).toBe(0);
+  });
 
+  it("should correctly record the score for throw 1", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(5);
+    game.throw();
+    expect(game.frameArray[0].throw1Score).toBe(5);
+  });
+
+  it("should correctly record the score for throw 2", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(5);
+    game.throw();
+    game.throw();
+    expect(game.frameArray[0].throw2Score).toBe(5);
+  });
+
+  it("should correctly sum the total score at the end of the frame", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(5);
+    game.throw();
+    game.throw();
+    expect(game.frameArray[0].totalScore).toBe(10);
+  });
+
+  it("should correctly register a strike", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(10);
+    game.throw();
+    expect(game.frameArray[0].totalScoreType).toBe("strike");
+  });
+
+  it("should correctly register a spare", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(5);
+    game.throw();
+    game.throw();
+    expect(game.frameArray[0].totalScoreType).toBe("spare");
+  });
+
+  it("should increment the number of throws after each throw", function() {
+    game.throw();
+    expect(game.numberOfThrows).toBe(1);
+    game.throw();
+    expect(game.numberOfThrows).toBe(2);
+  });
+
+  it("should increment the frame number after each frame has been played", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(5);
+    expect(game.currentFrame).toBe(1);
+    game.throw();
+    game.throw();
+    expect(game.numberOfThrows).toBe(2);
+  });
+
+  it("should calculate the correct bonus for a spare", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(5);
+    game.throw();
+    game.throw();
+    expect(game.frameArray[0].totalScoreType).toBe("spare");
+    expect(game.frameArray[0].bonus).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].bonus).toBe(5);
+  });
+
+  it("should calculate the correct bonus for a strike", function() {
+    spyOn(game, "_knockDownSkittles").and.returnValue(10);
+    game.throw();
+    expect(game.frameArray[0].totalScoreType).toBe("strike");
+    expect(game.frameArray[0].bonus).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].bonus).toBe(null);
+    game.throw();
+    expect(game.frameArray[0].bonus).toBe(20);
+  });
 
 });
